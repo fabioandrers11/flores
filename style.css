@@ -1,0 +1,147 @@
+:root {
+  --bg: #fff0f5;
+  --accent: #ff6f91;
+  --card-w: 340px;
+  --radius: 12px;
+  --shadow: 0 8px 24px rgba(240, 128, 128, 0.2);
+  --flap-h: 110px;
+}
+
+@media (max-width: 480px) {
+  :root {
+    --card-w: 90vw;
+    --flap-h: clamp(80px, 28vw, 120px);
+  }
+}
+
+/* =========================
+   BASE
+   ========================= */
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100svh;
+  margin: 0;
+  opacity: 1;
+  transition: opacity 0.8s ease;
+}
+
+body.fade-in { animation: fadeIn 0.8s ease forwards; }
+body.fade-out { animation: fadeOut 0.8s ease forwards; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* =========================
+   CARD
+   ========================= */
+.card {
+  width: var(--card-w);
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 28px rgba(240, 128, 128, 0.25);
+}
+
+.card img {
+  width: 200px;
+  max-width: 60%;
+  height: auto;
+  margin-bottom: 14px;
+}
+
+.card p {
+  font-family: 'Dancing Script', cursive;
+  font-size: 28px;
+  margin: 0 0 18px;
+  color: #333;
+  line-height: 1.4;
+}
+
+/* =========================
+   BOTÕES
+   ========================= */
+button {
+  font-family: 'Montserrat', sans-serif;
+  background: var(--accent);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 18px;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(255, 111, 145, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 18px rgba(255, 111, 145, 0.35);
+}
+
+#noBtn { transition: transform 0.3s ease; }
+
+/* =========================
+   ENVELOPE ANIMADO
+   ========================= */
+.card--envelope { padding-top: calc(24px + var(--flap-h) - 16px); }
+
+.card--envelope > * {
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  animation: contentFade 1s ease forwards;
+  animation-delay: 1s;
+}
+
+.card--envelope::before,
+.card--envelope::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: var(--flap-h);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  z-index: 2;
+}
+
+.card--envelope::before { background: var(--accent); }
+.card--envelope::after { background: linear-gradient(to bottom, rgba(255,255,255,.28), rgba(255,255,255,0)); }
+
+.card--envelope.animate-flap::before,
+.card--envelope.animate-flap::after { animation: flapOpen 1s ease forwards; }
+
+@keyframes flapOpen {
+  0% { transform: translateY(0); opacity: 1; }
+  80% { transform: translateY(-100%); opacity: 1; }
+  100% { transform: translateY(-120%); opacity: 0; }
+}
+
+@keyframes contentFade { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+/* =========================
+   CANVAS CORAÇÕES
+   ========================= */
+#confettiCanvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
